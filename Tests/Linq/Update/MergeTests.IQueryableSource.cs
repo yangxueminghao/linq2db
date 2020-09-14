@@ -136,7 +136,7 @@ namespace Tests.xUpdate
 			}
 		}
 
-		[Test]
+		[Test, ActiveIssue]
 		public void MergeUsingCte([MergeDataContextSource] string context)
 		{
 			using (var db = GetDataContext(context))
