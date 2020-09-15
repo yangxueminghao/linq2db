@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-#if NET46
+#if NET472
 using System.ServiceModel;
 using System.ServiceModel.Description;
 #endif
@@ -20,7 +20,7 @@ using LinqToDB.Reflection;
 using LinqToDB.Tools;
 using LinqToDB.Tools.Comparers;
 
-#if NET46
+#if NET472
 using LinqToDB.ServiceModel;
 #endif
 
@@ -76,7 +76,7 @@ namespace Tests
 			//			Configuration.Linq.GenerateExpressionTest  = true;
 			var assemblyPath = typeof(TestBase).Assembly.GetPath();
 
-#if NET46
+#if NET472
 			try
 			{
 				SqlServerTypes.Utilities.LoadNativeAssemblies(assemblyPath);
@@ -98,8 +98,8 @@ namespace Tests
 			var configName = "CORE21";
 #elif NETCOREAPP3_1
 			var configName = "CORE31";
-#elif NET46
-			var configName = "NET46";
+#elif NET472
+			var configName = "NET472";
 #else
 			var configName = "";
 #error Unknown framework
@@ -142,7 +142,7 @@ namespace Tests
 
 			Console.WriteLine("Connection strings:");
 
-#if !NET46
+#if !NET472
 			DataConnection.DefaultSettings            = TxtSettings.Instance;
 			TxtSettings.Instance.DefaultConfiguration = "SQLiteMs";
 
@@ -178,12 +178,12 @@ namespace Tests
 			if (!DefaultProvider.IsNullOrEmpty())
 			{
 				DataConnection.DefaultConfiguration = DefaultProvider;
-#if !NET46
+#if !NET472
 				TxtSettings.Instance.DefaultConfiguration = DefaultProvider;
 #endif
 			}
 
-#if NET46
+#if NET472
 			LinqService.TypeResolver = str =>
 			{
 				return str switch
@@ -218,7 +218,7 @@ namespace Tests
 			return fileName;
 		}
 
-#if NET46
+#if NET472
 		const  int          IP        = 22654;
 		static bool         _isHostOpen;
 		static LinqService? _service;
@@ -227,7 +227,7 @@ namespace Tests
 
 		static void OpenHost(MappingSchema? ms)
 		{
-#if NET46
+#if NET472
 			if (_isHostOpen)
 			{
 				_service!.MappingSchema = ms;
@@ -274,7 +274,7 @@ namespace Tests
 
 		public static readonly List<string> Providers = new List<string>
 		{
-#if NET46
+#if NET472
 			ProviderName.Sybase,
 			ProviderName.OracleNative,
 			TestProvName.Oracle11Native,
@@ -319,7 +319,7 @@ namespace Tests
 		{
 			if (configuration.EndsWith(".LinqService"))
 			{
-#if NET46
+#if NET472
 				OpenHost(ms);
 
 				var str = configuration.Substring(0, configuration.Length - ".LinqService".Length);
