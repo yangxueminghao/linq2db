@@ -64,7 +64,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'git add -A && git commit -m "[$(title)] baselines from https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" && git push https://$(GITHUB_TOKEN)@github.com/linq2db/linq2db.baselines.git baselines_$(system.pullRequest.sourceCommitId) && gh pr create --title "$(title)" --body "[$(title)] Baselines from  https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" --reviewer linq2db/baselines-reviewers --draft'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\baselines'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/baselines'
     failOnStderr: false # dont fail if there is no changes to baselines
   displayName: Commit test baselines
   condition: and(succeeded(), ${{ parameters.with_baselines }})
