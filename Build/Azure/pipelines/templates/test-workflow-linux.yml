@@ -11,7 +11,7 @@ steps:
     script: 'git clone https://github.com/linq2db/linq2db.baselines.git baselines && cd baselines && git checkout -b baselines_$(system.pullRequest.sourceCommitId) && cd ..'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
   displayName: Checkout test baselines
-  condition: ${{ parameters.with_baselines }}
+  condition: and(variables.title, ${{ parameters.with_baselines }})
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -51,7 +51,7 @@ steps:
 # just because there is no vstest handing in DotNetCoreCLI@2
 # https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreCLIV2/dotnetcore.ts#L60
 - script: dotnet vstest ./linq2db.Tests.dll /TestCaseFilter:"TestCategory != SkipCI" /Framework:.NETCoreApp,Version=v${{ parameters.netcoreversion }} /logger:trx
-  condition: and(variables.title, variables.script)
+  condition: and(variables.title, succeeded())
   displayName: 'Execute tests: $(title)'
 
 - task: PublishTestResults@2
@@ -63,11 +63,11 @@ steps:
 
 - task: CmdLine@2
   inputs:
-    script: 'git add -A && git commit -m "[$(title)] baselines from https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" && git push https://$(GITHUB_TOKEN)@github.com/linq2db/linq2db.baselines.git baselines_$(system.pullRequest.sourceCommitId) && gh pr create --title "$(title)" --body "[$(title)] Baselines from  https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" --reviewer linq2db/baselines-reviewers --draft'
+    script: 'git add -A && git commit -m "[Linux / NETCOREAPP${{ parameters.netcoreversion }} / $(title)] baselines from https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" && git push https://$(BASELINES_GH_PAT)@github.com/linq2db/linq2db.baselines.git baselines_$(system.pullRequest.sourceCommitId) && gh pr create --title "[Linux / NETCOREAPP${{ parameters.netcoreversion }} / $(title)] Baselines" --body "[Linux / NETCOREAPP${{ parameters.netcoreversion }} / $(title)] Baselines from  https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" --reviewer linq2db/baselines-reviewers --draft'
     workingDirectory: '$(System.DefaultWorkingDirectory)/baselines'
-    failOnStderr: false # dont fail if there is no changes to baselines
   displayName: Commit test baselines
-  condition: and(succeeded(), ${{ parameters.with_baselines }})
+  condition: and(variables.title, succeeded(), ${{ parameters.with_baselines }})
+  continueOnError: true # dont fail if there is no changes to baselines
   env:
     GITHUB_TOKEN: $(BASELINES_GH_PAT)
     EMAIL: azp@linq2db.com
