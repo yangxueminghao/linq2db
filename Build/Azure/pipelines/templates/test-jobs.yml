@@ -33,7 +33,7 @@ jobs:
       artifacts: $(netfx46_tests)
       framework: '.NETFramework,Version=v4.6'
       titleFramework: 'NET46'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 #############################################
 #  Tests: Windows (NETFX 4.6)               #
@@ -63,7 +63,7 @@ jobs:
       artifacts: $(netfx46_tests)
       framework: '.NETFramework,Version=v4.6'
       titleFramework: 'NET46'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ###################################
 #  Tests: Windows (NETCOREAPP2_1) #
@@ -93,7 +93,7 @@ jobs:
       artifacts: $(netcore21_tests)
       framework: '.NETCoreApp,Version=v2.1'
       titleFramework: 'NETCOREAPP2.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ###################################
 #  Tests: Windows (NETCOREAPP3_1) #
@@ -123,7 +123,7 @@ jobs:
       artifacts: $(netcore31_tests)
       framework: '.NETCoreApp,Version=v3.1'
       titleFramework: 'NETCOREAPP3.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ###################################
 #  Tests: Windows (NETCOREAPP2_1) #
@@ -153,7 +153,7 @@ jobs:
       artifacts: $(netcore21_tests)
       framework: '.NETCoreApp,Version=v2.1'
       titleFramework: 'NETCOREAPP2.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ########################################
 #  Tests: Ubuntu 20.04 (NETCOREAPP2_1) #
@@ -181,7 +181,7 @@ jobs:
     parameters:
       artifacts: $(netcore21_tests)
       netcoreversion: '2.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ########################################
 #  Tests: Ubuntu 20.04 (NETCOREAPP3_1) #
@@ -209,7 +209,7 @@ jobs:
     parameters:
       artifacts: $(netcore31_tests)
       netcoreversion: '3.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 ########################################
 #  Tests: Ubuntu 16.04 (NETCOREAPP2_1) #
@@ -237,7 +237,7 @@ jobs:
     parameters:
       artifacts: $(netcore21_tests)
       netcoreversion: '2.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 #################################
 #  Tests: MacOS (NETCOREAPP2_1) #
@@ -266,7 +266,7 @@ jobs:
     parameters:
       artifacts: $(netcore21_tests)
       netcoreversion: '2.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
 
 #################################
 #  Tests: MacOS (NETCOREAPP3_1) #
@@ -295,4 +295,4 @@ jobs:
     parameters:
       artifacts: $(netcore31_tests)
       netcoreversion: '3.1'
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}

@@ -51,7 +51,7 @@ jobs:
     parameters:
       enabled: ${{ parameters.enabled }}
       experimental: ${{ parameters.experimental }}
-      with_baselines: ${{ parameter.with_baselines }}
+      with_baselines: ${{ parameters.with_baselines }}
       test_matrix:
 # SQLite
         - name: SQLite

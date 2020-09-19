@@ -10,7 +10,7 @@ steps:
   inputs:
     script: 'git clone https://github.com/linq2db/linq2db.baselines.git baselines && cd baselines && git checkout -b baselines_$(system.pullRequest.sourceCommitId) && cd ..'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
-  displayName: Chechout test baselines
+  displayName: Checkout test baselines
   condition: ${{ parameters.with_baselines }}
 
 - task: DownloadPipelineArtifact@2
