@@ -31,3 +31,4 @@ stages:
     parameters:
       enabled: succeeded()
       experimental: false
+      with_baselines: true

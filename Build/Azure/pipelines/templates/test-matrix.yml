@@ -1,6 +1,7 @@
 parameters:
   enabled: false
   experimental: false
+  with_baselines: false
 
 # Test matrix (list of all database test runs with configuration options)
 # Because azure pipelines doesn't support non-string variables and strategy templates
@@ -50,6 +51,7 @@ jobs:
     parameters:
       enabled: ${{ parameters.enabled }}
       experimental: ${{ parameters.experimental }}
+      with_baselines: ${{ parameter.with_baselines }}
       test_matrix:
 # SQLite
         - name: SQLite
@@ -65,7 +67,7 @@ jobs:
           enable_fw_net46: true
           enable_fw_netcore21: true
           enable_fw_netcore31: false
-          is_experimental: false
+          is_experimental: true
 
         - name: SQLite_MS
           title: SQLite.MS

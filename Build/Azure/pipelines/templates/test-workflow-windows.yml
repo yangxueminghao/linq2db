@@ -3,9 +3,17 @@ parameters:
   artifacts: ''
   framework: ''
   titleFramework: ''
+  with_baselines: false
 
 steps:
 - checkout: none
+
+- task: CmdLine@2
+  inputs:
+    script: 'git clone https://github.com/linq2db/linq2db.baselines.git baselines && cd baselines && git checkout -b baselines_$(system.pullRequest.sourceCommitId) && cd ..'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+  displayName: Chechout test baselines
+  condition: ${{ parameters.with_baselines }}
 
 - task: DownloadPipelineArtifact@2
   inputs:
@@ -44,6 +52,19 @@ steps:
     testRunTitle: 'Windows / ${{ parameters.titleFramework }} / $(title)'
   displayName: '$(title)'
   condition: variables.title
+
+- task: CmdLine@2
+  inputs:
+    script: 'git add -A && git commit -m "[$(title)] baselines from https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" && git push https://$(GITHUB_TOKEN)@github.com/linq2db/linq2db.baselines.git baselines_$(system.pullRequest.sourceCommitId) && gh pr create --title "$(title)" --body "[$(title)] Baselines from  https://github.com/linq2db/linq2db/pull/$(system.pullRequest.pullRequestNumber)" --reviewer linq2db/baselines-reviewers --draft'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\baselines'
+    failOnStderr: false # dont fail if there is no changes to baselines
+  displayName: Commit test baselines
+  condition: and(succeeded(), ${{ parameters.with_baselines }})
+  env:
+    GITHUB_TOKEN: $(BASELINES_GH_PAT)
+    EMAIL: azp@linq2db.com
+    GIT_AUTHOR_NAME: Azure Pipelines Bot
+    GIT_COMMITTER_NAME: Azure Pipelines Bot
 
 #    - powershell: Get-OdbcDriver | Select Name, Platform
 #      displayName: List ODBC providers
