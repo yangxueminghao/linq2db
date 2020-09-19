@@ -1,0 +1,61 @@
+parameters:
+  artifacts: ''
+  netcoreversion: ''
+
+steps:
+- checkout: none
+
+- task: DownloadPipelineArtifact@2
+  inputs:
+    artifactName: ${{ parameters.artifacts }}
+    targetPath: '$(System.DefaultWorkingDirectory)'
+  condition: variables.title
+
+- task: CmdLine@2
+  inputs:
+    script: 'cp $(System.DefaultWorkingDirectory)/configs/$(config).json UserDataProviders.json'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+  displayName: Copy test config
+  condition: variables.title
+
+- task: NuGet@0
+  displayName: Install nugets
+  inputs:
+    command: 'install'
+    arguments: '$(nuget) -ExcludeVersion'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/scripts'
+  condition: and(variables.title, variables.nuget)
+
+- task: CmdLine@2
+  inputs:
+    script: 'chmod +x $(script)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/scripts'
+  condition: and(variables.title, variables.script)
+  displayName: Mark script as executable
+
+- task: CmdLine@2
+  inputs:
+    script: '$(System.DefaultWorkingDirectory)/scripts/$(script)'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+  condition: and(variables.title, variables.script)
+  displayName: Setup tests
+
+# just because there is no vstest handing in DotNetCoreCLI@2
+# https://github.com/microsoft/azure-pipelines-tasks/blob/master/Tasks/DotNetCoreCLIV2/dotnetcore.ts#L60
+- script: dotnet vstest ./linq2db.Tests.dll /TestCaseFilter:"TestCategory != SkipCI" /Framework:.NETCoreApp,Version=v${{ parameters.netcoreversion }} /logger:trx
+  condition: and(variables.title, variables.script)
+  displayName: 'Execute tests: $(title)'
+
+- task: PublishTestResults@2
+  condition: and(variables.title, succeededOrFailed())
+  inputs:
+    testRunner: VsTest
+    testResultsFiles: '**/*.trx'
+    testRunTitle: 'Linux / NETCOREAPP${{ parameters.netcoreversion }} / $(title)'
+
+#    - task: Docker@2
+#      displayName: Auth on hub.docker.com
+#      inputs:
+#        command: login
+#        containerRegistry: dockerhub
+#      condition: and(variables.title, eq(variables.docker_login, 'true'))
