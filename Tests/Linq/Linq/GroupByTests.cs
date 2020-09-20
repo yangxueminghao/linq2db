@@ -937,7 +937,7 @@ namespace Tests.Linq
 						from sub in Types
 						where
 							sub.ID == 1 &&
-							sub.DateTimeValue <= DateTime.Today
+							sub.DateTimeValue <= TestData.Date
 						group sub by new
 						{
 							sub.ID
@@ -954,7 +954,7 @@ namespace Tests.Linq
 						from sub in db.Types
 						where
 							sub.ID == 1 &&
-							sub.DateTimeValue <= DateTime.Today
+							sub.DateTimeValue <= TestData.Date
 						group sub by new
 						{
 							sub.ID

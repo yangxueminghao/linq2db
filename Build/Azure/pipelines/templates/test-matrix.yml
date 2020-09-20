@@ -67,7 +67,7 @@ jobs:
           enable_fw_net46: true
           enable_fw_netcore21: true
           enable_fw_netcore31: false
-          is_experimental: true
+          is_experimental: false
 
         - name: SQLite_MS
           title: SQLite.MS

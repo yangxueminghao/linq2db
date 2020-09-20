@@ -1459,6 +1459,7 @@ namespace Tests.Linq
 		[Test]
 		public void GetDateTest1([DataSources] string context)
 		{
+			using (new DisableBaseline("Server-side date generation test"))
 			using (var db = GetDataContext(context))
 			{
 				var dates =
