@@ -571,9 +571,7 @@ namespace Tests.DataProvider
 			using (var db = new DataConnection(context))
 			using (db.BeginTransaction())
 			{
-				Random rnd = new Random();
-				var image = new byte[9000];
-				rnd.NextBytes(image);
+				var image = TestData.Binary(9000);
 
 				var testItem = new ImageDataType { imageDataType = image };
 

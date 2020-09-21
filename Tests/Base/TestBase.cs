@@ -34,7 +34,7 @@ namespace Tests
 
 	public class TestBase
 	{
-		protected class TestData
+		protected static class TestData
 		{
 			public static readonly DateTimeOffset DateTimeOffset    = new DateTimeOffset(2020, 2, 29, 17, 54, 55, 123, TimeSpan.FromMinutes(45)).AddTicks(1234);
 			public static readonly DateTimeOffset DateTimeOffsetUtc = new DateTimeOffset(2020, 2, 29, 17, 9, 55, 123, TimeSpan.Zero).AddTicks(1234);
@@ -45,6 +45,15 @@ namespace Tests
 			public static readonly Guid     Guid1                   = new Guid("bc7b663d-0fde-4327-8f92-5d8cc3a11d11");
 			public static readonly Guid     Guid2                   = new Guid("a948600d-de21-4f74-8ac2-9516b287076e");
 			public static readonly Guid     Guid3                   = new Guid("bd3973a5-4323-4dd8-9f4f-df9f93e2a627");
+
+			public static readonly byte[] Binary(int size)
+			{
+				var value = new byte[size];
+				for (var i = 0; i < value.Length; i++)
+					value[i] = (byte)(i % 256);
+
+				return value;
+			}
 
 			public static Guid SequentialGuid(int n)  => new Guid($"233bf399-9710-4e79-873d-2ec7bf1e{n:x4}");
 		}
@@ -579,11 +588,13 @@ namespace Tests
 					ParentInheritance.Where(p => p is ParentInheritanceValue).Cast<ParentInheritanceValue>().ToList();
 
 		private   List<ParentInheritance1>? _parentInheritance1;
-		protected List<ParentInheritance1> ParentInheritance1 => _parentInheritance1 ??=
-					ParentInheritance.Where(p => p is ParentInheritance1).Cast<ParentInheritance1>().ToList();
+		protected List<ParentInheritance1> ParentInheritance1 =>
+			_parentInheritance1 ??=
+				ParentInheritance.Where(p => p is ParentInheritance1).Cast<ParentInheritance1>().ToList();
 
 		private   List<ParentInheritanceBase4>? _parentInheritance4;
-		protected List<ParentInheritanceBase4> ParentInheritance4 => _parentInheritance4 ??= Parent
+		protected List<ParentInheritanceBase4> ParentInheritance4 =>
+			_parentInheritance4 ??= Parent
 					.Where(p => p.Value1.HasValue && (new[] { 1, 2 }.Contains(p.Value1.Value)))
 					.Select(p => p.Value1 == 1 ?
 						(ParentInheritanceBase4)new ParentInheritance14 { ParentID = p.ParentID } :

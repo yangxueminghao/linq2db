@@ -13,8 +13,8 @@ namespace LinqToDB.Metadata
 	{
 		// don't forget to put lock on List<Attribute> when access it
 		readonly ConcurrentDictionary<Type,List<Attribute>>                            _types          = new ConcurrentDictionary<Type,List<Attribute>>();
-		// set used to guaranty uniqueness
-		// list used to guaranty same order for columns in select queries
+		// set used to guarantee uniqueness
+		// list used to guarantee same order for columns in select queries
 		readonly ConcurrentDictionary<Type,Tuple<ISet<MemberInfo>, IList<MemberInfo>>> _dynamicColumns = new ConcurrentDictionary<Type,Tuple<ISet<MemberInfo>, IList<MemberInfo>>>();
 
 		private static bool IsSystemOrNullType(Type? type)

@@ -3261,7 +3261,7 @@ namespace LinqToDB.SqlProvider
 					PrintParameterName(sb, p);
 					sb.Append(" = ");
 					if (!ValueToSqlConverter.TryConvert(sb, p.Value))
-						sb.Append(p.Value);
+						FormatParameterValue(sb, p.Value);
 					sb.AppendLine();
 				}
 
@@ -3269,6 +3269,30 @@ namespace LinqToDB.SqlProvider
 			}
 
 			return sb;
+		}
+
+		// for values without literal support from provider we should generate debug string using fixed format
+		// to avoid deviations on different locales or locale settings
+		private static void FormatParameterValue(StringBuilder sb, object? value)
+		{
+			if (value is DateTime dt)
+			{
+				// ISO8601 format (with Kind-specific offset part)
+				sb
+					.Append('\'')
+					.Append(dt.ToString("o"))
+					.Append('\'');
+			}
+			else if (value is DateTimeOffset dto)
+			{
+				// ISO8601 format with offset
+				sb
+					.Append('\'')
+					.Append(dto.ToString("o"))
+					.Append('\'');
+			}
+			else
+				sb.Append(value);
 		}
 
 		public string ApplyQueryHints(string sql, List<string> queryHints)

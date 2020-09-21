@@ -255,7 +255,7 @@ namespace Tests.Linq
 			using (var db = (DataConnection)GetDataContext(context))
 			using (var table = db.CreateLocalTable(sampleData))
 			{
-				var dataQuery = table.Where(t => t.ServiceDate > Sql.CurrentTimestamp.AddDays(-2));
+				var dataQuery = table.Where(t => t.ServiceDate > TestData.DateTime.AddDays(-2));
 
 				var query = dataQuery.OrderByDescending(t => t.ServiceDate).ThenByDescending(tt => tt.BookingID);
 
