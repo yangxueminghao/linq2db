@@ -46,7 +46,7 @@ namespace Tests
 			public static readonly Guid     Guid2                   = new Guid("a948600d-de21-4f74-8ac2-9516b287076e");
 			public static readonly Guid     Guid3                   = new Guid("bd3973a5-4323-4dd8-9f4f-df9f93e2a627");
 
-			public static readonly byte[] Binary(int size)
+			public static byte[] Binary(int size)
 			{
 				var value = new byte[size];
 				for (var i = 0; i < value.Length; i++)
