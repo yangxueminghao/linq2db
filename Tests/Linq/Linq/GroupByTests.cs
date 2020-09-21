@@ -1777,7 +1777,9 @@ namespace Tests.Linq
 		[Test]
 		public void GroupByCustomEntity1([DataSources] string context)
 		{
-			var rand = new Random().Next(5);
+			// I definitly selected it by random
+			var rand = 3;
+			//var rand = new Random().Next(5);
 			//var rand = new Random();
 
 			using (var db = GetDataContext(context))

@@ -223,9 +223,8 @@ namespace Tests.Data
 				// just check schema (no api used)
 				db.DataProvider.GetSchemaProvider().GetSchema(db);
 
-
 				// assert api resolved and callable
-				SqlCeTools.CreateDatabase($"TestSqlCe_{Guid.NewGuid():N}");
+				SqlCeTools.CreateDatabase($"TestSqlCe_{TestData.Guid1:N}");
 			}
 		}
 

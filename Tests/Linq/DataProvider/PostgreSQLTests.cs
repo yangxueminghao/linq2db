@@ -467,7 +467,7 @@ namespace Tests.DataProvider
 					conn.Execute<Guid?>("SELECT Cast('6F9619FF-8B86-D011-B42D-00C04FC964FF' as uuid)"),
 					Is.EqualTo(new Guid("6F9619FF-8B86-D011-B42D-00C04FC964FF")));
 
-				var guid = Guid.NewGuid();
+				var guid = TestData.Guid1;
 
 				Assert.That(conn.Execute<Guid>("SELECT :p", DataParameter.Create("p", guid)), Is.EqualTo(guid));
 				Assert.That(conn.Execute<Guid>("SELECT :p", new DataParameter { Name = "p", Value = guid }), Is.EqualTo(guid));
@@ -724,7 +724,7 @@ namespace Tests.DataProvider
 									MoneyValue    = 1000m + n,
 									DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 									BoolValue     = true,
-									GuidValue     = Guid.NewGuid(),
+									GuidValue     = TestData.SequentialGuid(n),
 									SmallIntValue = (short)n
 								}
 							));
@@ -755,7 +755,7 @@ namespace Tests.DataProvider
 									MoneyValue    = 1000m + n,
 									DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 									BoolValue     = true,
-									GuidValue     = Guid.NewGuid(),
+									GuidValue     = TestData.SequentialGuid(n),
 									SmallIntValue = (short)n
 								}
 							));
@@ -800,7 +800,7 @@ namespace Tests.DataProvider
 			{
 				var e = new CreateTableTestClass
 				{
-					Guid = Guid.NewGuid(),
+					Guid       = TestData.Guid1,
 					TimeOffset = new DateTimeOffset(2017, 06, 17, 16, 40, 33, 0, TimeSpan.FromHours(-3))
 				};
 				db.Insert(e);
@@ -937,7 +937,7 @@ namespace Tests.DataProvider
 					textDataType        = "текст",
 
 					binaryDataType      = new byte[] { 1, 2, 3 },
-					uuidDataType        = Guid.NewGuid(),
+					uuidDataType        = TestData.Guid1,
 					bitDataType         = new BitArray(new []{ true, false, true }),
 					booleanDataType     = true,
 					colorDataType       = "Green",
@@ -1082,7 +1082,7 @@ namespace Tests.DataProvider
 					textDataType        = "текст",
 
 					binaryDataType      = new byte[] { 1, 2, 3 },
-					uuidDataType        = Guid.NewGuid(),
+					uuidDataType        = TestData.Guid2,
 					bitDataType         = new BitArray(new []{ true, false, true }),
 					booleanDataType     = true,
 					colorDataType       = "Green",

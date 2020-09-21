@@ -1237,7 +1237,7 @@ namespace Tests.xUpdate
 				{
 					var p = new Person()
 					{
-						FirstName = Guid.NewGuid().ToString(),
+						FirstName = TestData.Guid1.ToString(),
 						ID = 1000,
 					};
 

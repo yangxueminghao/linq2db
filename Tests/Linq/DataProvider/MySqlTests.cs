@@ -684,7 +684,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}));
 					}
@@ -715,7 +715,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}));
 					}
@@ -865,12 +865,24 @@ namespace Tests.DataProvider
 			}
 		}
 
-		public static IEnumerable<ProcedureSchema> ProcedureTestCases
+		public class ProcedureTestCase
+		{
+			public ProcedureTestCase(ProcedureSchema schema)
+			{
+				Schema = schema;
+			}
+
+			public ProcedureSchema Schema { get; }
+
+			public override string ToString() => Schema.ProcedureName;
+		}
+
+		public static IEnumerable<ProcedureTestCase> ProcedureTestCases
 		{
 			get
 			{
 				// create procedure
-				yield return new ProcedureSchema()
+				yield return new ProcedureTestCase(new ProcedureSchema()
 				{
 					CatalogName     = "SET_BY_TEST",
 					ProcedureName   = "TestProcedure",
@@ -972,10 +984,10 @@ namespace Tests.DataProvider
 							TableName = "person"
 						}
 					}
-				};
+				});
 
 				// create function
-				yield return new ProcedureSchema()
+				yield return new ProcedureTestCase(new ProcedureSchema()
 				{
 					CatalogName     = "SET_BY_TEST",
 					ProcedureName   = "TestFunction",
@@ -1005,10 +1017,10 @@ namespace Tests.DataProvider
 							DataType      = DataType.Int32
 						}
 					}
-				};
+				});
 
 				// create function
-				yield return new ProcedureSchema()
+				yield return new ProcedureTestCase(new ProcedureSchema()
 				{
 					CatalogName     = "SET_BY_TEST",
 					ProcedureName   = "TestOutputParametersWithoutTableProcedure",
@@ -1039,18 +1051,19 @@ namespace Tests.DataProvider
 							DataType      = DataType.SByte
 						}
 					}
-				};
+				});
 			}
 		}
 
 		[Test]
 		public void ProceduresSchemaProviderTest(
 			[IncludeDataSources(TestProvName.AllMySql)] string context,
-			[ValueSource(nameof(ProcedureTestCases))] ProcedureSchema expectedProc)
+			[ValueSource(nameof(ProcedureTestCases))] ProcedureTestCase testCase)
 		{
 			// TODO: add aggregate/udf functions test cases
 			using (var db = (DataConnection)GetDataContext(context))
 			{
+				var expectedProc = testCase.Schema;
 				expectedProc.CatalogName = TestUtils.GetDatabaseName(db);
 
 				var schema = db.DataProvider.GetSchemaProvider().GetSchema(db);
@@ -1466,7 +1479,7 @@ namespace Tests.DataProvider
 						Bit10            = 0x003F,
 						Bit64            = 0xDEADBEAF,
 						Json             = "{\"x\": 10}",
-						Guid             = Guid.NewGuid()
+						Guid             = TestData.Guid1
 					};
 
 					db.Insert(testRecord);

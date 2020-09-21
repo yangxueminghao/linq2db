@@ -974,7 +974,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001,  1,  11,  1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						));
@@ -1023,7 +1023,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001,  1,  11,  1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						));
@@ -2679,8 +2679,8 @@ namespace Tests.DataProvider
 				var origin = new Issue731Table()
 				{
 					Id         = 1,
-					Guid       = Guid.NewGuid(),
-					BinaryGuid = Guid.NewGuid(),
+					Guid       = TestData.Guid1,
+					BinaryGuid = TestData.Guid2,
 					BlobValue  = new byte[] { 1, 2, 3 },
 					RawValue   = new byte[] { 4, 5, 6 }
 				};
@@ -2973,7 +2973,7 @@ namespace Tests.DataProvider
 
 					new DataParameter {Name = "bfileDataType"         , Direction = ParameterDirection.InputOutput, DataType = DataType.BFile,          Value = new byte []{ 1,2,3 }},
 
-					new DataParameter {Name = "guidDataType"          , Direction = ParameterDirection.InputOutput, DataType = DataType.Guid,           Value = Guid.NewGuid()},
+					new DataParameter {Name = "guidDataType"          , Direction = ParameterDirection.InputOutput, DataType = DataType.Guid,           Value = TestData.Guid1},
 
 					// TODO: it is not clear which db type use for this parameter so oracle will accept it
 					//new DataParameter {Name = "uriDataType"           , Direction = ParameterDirection.InputOutput, DataType = DataType.Undefined,      Value = "http://uri.com" },

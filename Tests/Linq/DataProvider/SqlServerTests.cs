@@ -558,7 +558,7 @@ namespace Tests.DataProvider
 					conn.Execute<Guid?>("SELECT Cast('6F9619FF-8B86-D011-B42D-00C04FC964FF' as uniqueidentifier)"),
 					Is.EqualTo(new Guid("6F9619FF-8B86-D011-B42D-00C04FC964FF")));
 
-				var guid = Guid.NewGuid();
+				var guid = TestData.Guid1;
 
 				Assert.That(conn.Execute<Guid>("SELECT @p", DataParameter.Create("p", guid)),                Is.EqualTo(guid));
 				Assert.That(conn.Execute<Guid>("SELECT @p", new DataParameter { Name = "p", Value = guid }), Is.EqualTo(guid));
@@ -749,7 +749,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						));
@@ -781,7 +781,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						));
@@ -813,7 +813,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						));
@@ -845,7 +845,7 @@ namespace Tests.DataProvider
 								MoneyValue    = 1000m + n,
 								DateTimeValue = new DateTime(2001, 1, 11, 1, 11, 21, 100),
 								BoolValue     = true,
-								GuidValue     = Guid.NewGuid(),
+								GuidValue     = TestData.SequentialGuid(n),
 								SmallIntValue = (short)n
 							}
 						),
@@ -1429,10 +1429,10 @@ namespace Tests.DataProvider
 
 				var par = new
 				{
-					FirstName = Guid.NewGuid().ToString(),
-					LastName = "Person",
+					FirstName  = TestData.Guid1.ToString(),
+					LastName   = "Person",
 					MiddleName = "X",
-					Gender = "M"
+					Gender     = "M"
 				};
 				
 				var ret = db.ExecuteProc($"[{dbName}]..[Person_Insert]", par);
@@ -1451,10 +1451,10 @@ namespace Tests.DataProvider
 
 				var par = new
 				{
-					FirstName = Guid.NewGuid().ToString(),
-					LastName = "Person",
+					FirstName  = TestData.Guid2.ToString(),
+					LastName   = "Person",
 					MiddleName = "X",
-					Gender = "M"
+					Gender     = "M"
 				};
 
 				var ret = await db.ExecuteProcAsync($"[{dbName}]..[Person_Insert]", CancellationToken.None, par);
@@ -1473,10 +1473,10 @@ namespace Tests.DataProvider
 
 				var par = new
 				{
-					FirstName = Guid.NewGuid().ToString(),
-					LastName = "Person",
+					FirstName  = TestData.Guid3.ToString(),
+					LastName   = "Person",
 					MiddleName = "X",
-					Gender = "M"
+					Gender     = "M"
 				};
 				
 				var ret = db.ExecuteProc<int>($"[{dbName}]..[Person_Insert]", par);
@@ -1495,10 +1495,10 @@ namespace Tests.DataProvider
 
 				var par = new
 				{
-					FirstName = Guid.NewGuid().ToString(),
-					LastName = "Person",
+					FirstName  = TestData.SequentialGuid(1).ToString(),
+					LastName   = "Person",
 					MiddleName = "X",
-					Gender = "M"
+					Gender     = "M"
 				};
 
 				var ret = await db.ExecuteProcAsync($"[{dbName}]..[Person_Insert]", par);

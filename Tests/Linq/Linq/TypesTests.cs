@@ -207,6 +207,7 @@ namespace Tests.Linq
 				TestProvName.AllSapHana)]
 			string context)
 		{
+			using (new DisableBaseline("Server-side guid generation test"))
 			using (var db = GetDataContext(context))
 			{
 				try

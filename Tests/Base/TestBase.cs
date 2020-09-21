@@ -41,6 +41,8 @@ namespace Tests
 			public static readonly Guid     Guid1    = new Guid("bc7b663d-0fde-4327-8f92-5d8cc3a11d11");
 			public static readonly Guid     Guid2    = new Guid("a948600d-de21-4f74-8ac2-9516b287076e");
 			public static readonly Guid     Guid3    = new Guid("bd3973a5-4323-4dd8-9f4f-df9f93e2a627");
+
+			public static Guid SequentialGuid(int n) => new Guid($"233bf399-9710-4e79-873d-2ec7bf1e{n:x4}");
 		}
 
 		private const int TRACES_LIMIT = 50000;
