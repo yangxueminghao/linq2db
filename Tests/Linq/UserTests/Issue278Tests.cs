@@ -218,7 +218,7 @@ namespace Tests.UserTests
 		{
 			db.Types2.Insert(() => new LinqDataTypes2()
 			{
-				DateTimeValue = DateTime.Now
+				DateTimeValue = TestData.DateTime
 			});
 		}
 
@@ -226,7 +226,7 @@ namespace Tests.UserTests
 		{
 			db.Types2.InsertWithIdentity(() => new LinqDataTypes2()
 			{
-				DateTimeValue = DateTime.Now
+				DateTimeValue = TestData.DateTime
 			});
 		}
 
@@ -235,10 +235,10 @@ namespace Tests.UserTests
 			db.Types2.InsertOrUpdate(() => new LinqDataTypes2()
 			{
 				ID = 100500,
-				DateTimeValue = DateTime.Now
+				DateTimeValue = TestData.DateTime
 			}, r => new LinqDataTypes2()
 			{
-				DateTimeValue = DateTime.Now
+				DateTimeValue = TestData.DateTime
 			});
 		}
 
@@ -247,7 +247,7 @@ namespace Tests.UserTests
 			db.Types2.Update(_ => new LinqDataTypes2()
 			{
 				ID = 100500,
-				DateTimeValue = DateTime.Now
+				DateTimeValue = TestData.DateTime
 			});
 		}
 

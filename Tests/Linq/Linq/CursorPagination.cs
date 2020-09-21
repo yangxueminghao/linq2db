@@ -247,7 +247,7 @@ namespace Tests.Linq
 			var take = 12;
 			var sampleData = Enumerable.Range(1, 100).Select(i => new Booking
 			{
-				ServiceDate = DateTime.Now.AddDays(-1 - i % 3),
+				ServiceDate = TestData.DateTime.AddDays(-1 - i % 3),
 				Value = i,
 				BookingID = i
 			}).ToArray();

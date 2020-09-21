@@ -819,8 +819,8 @@ namespace Tests.DataProvider
 		{
 			PostgreSQLTools.GetDataProvider().CreateConnection(DataConnection.GetConnectionString(context));
 
-			var d = new NpgsqlDateTime(DateTime.Today);
-			var o = new DateTimeOffset(DateTime.Today);
+			var d = new NpgsqlDateTime(TestData.Date);
+			var o = new DateTimeOffset(TestData.Date);
 			var c1 = PostgreSQLTools.GetDataProvider().MappingSchema.GetConvertExpression<NpgsqlDateTime, DateTimeOffset>();
 			var c2 = PostgreSQLTools.GetDataProvider().MappingSchema.GetConvertExpression<NpgsqlDateTime, DateTimeOffset?>();
 
@@ -1446,7 +1446,7 @@ namespace Tests.DataProvider
 			using (var db = GetDataContext(context, CreateRangesMapping()))
 			using (var table = db.CreateLocalTable<TableWithDateRanges>())
 			{
-				var date = DateTime.UtcNow;
+				var date = TestData.DateTimeUtc;
 				var range1 = new SomeRange<DateTime>(date, null);
 				var range2 = new SomeRange<DateTime>(date.AddDays(1), null);
 				db.Insert(new TableWithDateRanges
@@ -1463,7 +1463,7 @@ namespace Tests.DataProvider
 			using (var db = (DataConnection)GetDataContext(context, CreateRangesMapping()))
 			using (var table = db.CreateLocalTable<TableWithDateRanges>())
 			{
-				var date = DateTime.UtcNow;
+				var date = TestData.DateTimeUtc;
 
 				var items = Enumerable.Range(1, 100).Select(i =>
 				{
@@ -1488,7 +1488,7 @@ namespace Tests.DataProvider
 			using (var db = (DataConnection)GetDataContext(context, CreateRangesMapping()))
 			using (var table = db.CreateLocalTable<TableWithDateRanges>())
 			{
-				var date = DateTime.UtcNow;
+				var date = TestData.DateTimeUtc;
 
 				var items = Enumerable.Range(1, 100).Select(i =>
 				{
@@ -1532,7 +1532,6 @@ namespace Tests.DataProvider
 			using (var db = GetDataContext(context))
 			using (var table = db.CreateLocalTable<NpgsqlTableWithDateRanges>())
 			{
-				var date = DateTime.Now;
 				var range1 = new NpgsqlRange<DateTime>(new DateTime(2000, 2, 3), true, new DateTime(2000, 3, 3), true);
 				var range2 = new NpgsqlRange<DateTime>(new DateTime(2000, 2, 3), false, new DateTime(2000, 3, 3), false);
 				var range3 = new NpgsqlRange<DateTime>(new DateTime(2000, 2, 3, 4, 5, 6), new DateTime(2000, 4, 3, 4, 5, 6));
@@ -1649,63 +1648,89 @@ namespace Tests.DataProvider
 			public T Value = default!;
 		}
 
-		public static IEnumerable<DateTime> DateTimeKinds
+		public class DateTimeKindTestCase
+		{
+			public DateTimeKindTestCase(DateTime dateTime)
+			{
+				DateTime = dateTime;
+			}
+
+			public DateTime DateTime { get; }
+
+			public override string ToString() => $"{DateTime}+{DateTime.Kind}";
+		}
+
+		public static IEnumerable<DateTimeKindTestCase> DateTimeKinds
 		{
 			get
 			{
-				yield return new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Local);
-				yield return new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Utc);
-				yield return new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Unspecified);
+				yield return new DateTimeKindTestCase(new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Local));
+				yield return new DateTimeKindTestCase(new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Utc));
+				yield return new DateTimeKindTestCase(new DateTime(2000, 2, 3, 4, 5, 6, 7, DateTimeKind.Unspecified));
 			}
 		}
 
 		[Test]
 		public void Issue1742_Timestamp(
 			[IncludeDataSources(TestProvName.AllPostgreSQL)] string context,
-			[ValueSource(nameof(DateTimeKinds))] DateTime value,
+			[ValueSource(nameof(DateTimeKinds))] DateTimeKindTestCase value,
 			[Values(DataType.Undefined, DataType.Date)] DataType dataType,
 			[Values(null, "timestamp")] string dbType)
 		{
 			using (var db = GetDataContext(context))
 			{
-				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_ts({new DataParameter { Name = "p1", Value = value, DataType = dataType, DbType = dbType }}) as \"Value\"").Single();
+				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_ts({new DataParameter { Name = "p1", Value = value.DateTime, DataType = dataType, DbType = dbType }}) as \"Value\"").Single();
 
 				Assert.AreEqual(44, result.Value);
 			}
 		}
 
-		public static IEnumerable<(DataType, string?)> TSTZTypes
+		public static IEnumerable<DataTypeTestCase> TSTZTypes
 		{
 			get
 			{
-				yield return (DataType.DateTimeOffset, null);
-				yield return (DataType.Undefined, "timestamptz");
-				yield return (DataType.DateTimeOffset, "timestamptz");
+				yield return new DataTypeTestCase(DataType.DateTimeOffset, null);
+				yield return new DataTypeTestCase(DataType.Undefined, "timestamptz");
+				yield return new DataTypeTestCase(DataType.DateTimeOffset, "timestamptz");
 			}
 		}
 
-		public static IEnumerable<(DataType, string?)> DateTypes
+		public class DataTypeTestCase
+		{
+			public DataTypeTestCase(DataType dataType, string? dbType)
+			{
+				DataType = dataType;
+				DbType   = dbType;
+			}
+
+			public DataType DataType { get; }
+			public string?  DbType   { get; }
+
+			public override string ToString() => $"{DataType}, {DbType}";
+		}
+
+		public static IEnumerable<DataTypeTestCase> DateTypes
 		{
 			get
 			{
-				yield return (DataType.Date, null);
+				yield return new DataTypeTestCase(DataType.Date, null);
 				// right now we don't infer DataType from dbtype
 				//yield return (DataType.Undefined, "date");
-				yield return (DataType.Date, "date");
+				yield return new DataTypeTestCase(DataType.Date, "date");
 			}
 		}
 
 		[Test]
 		public void Issue1742_Date(
 			[IncludeDataSources(TestProvName.AllPostgreSQL)] string context,
-			[ValueSource(nameof(DateTimeKinds))] DateTime value,
-			[ValueSource(nameof(DateTypes))] (DataType dataType, string dbType) type)
+			[ValueSource(nameof(DateTimeKinds))] DateTimeKindTestCase value,
+			[ValueSource(nameof(DateTypes))] DataTypeTestCase type)
 		{
 			using (var db = GetDataContext(context))
 			{
-				var uspecified = new DateTime(DateTime.Now.Ticks, DateTimeKind.Unspecified);
+				var uspecified = new DateTime(TestData.DateTime.Ticks, DateTimeKind.Unspecified);
 
-				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_date({new DataParameter { Name = "p1", Value = value, DataType = type.dataType, DbType = type.dbType }}) as \"Value\"").Single();
+				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_date({new DataParameter { Name = "p1", Value = value.DateTime, DataType = type.DataType, DbType = type.DbType }}) as \"Value\"").Single();
 
 				Assert.AreEqual(42, result.Value);
 			}
@@ -1714,14 +1739,14 @@ namespace Tests.DataProvider
 		[Test]
 		public void Issue1742_TimestampTZ(
 			[IncludeDataSources(TestProvName.AllPostgreSQL)] string context,
-			[ValueSource(nameof(DateTimeKinds))] DateTime value,
-			[ValueSource(nameof(TSTZTypes))] (DataType dataType, string dbType) type)
+			[ValueSource(nameof(DateTimeKinds))] DateTimeKindTestCase value,
+			[ValueSource(nameof(TSTZTypes))] DataTypeTestCase type)
 		{
 			using (var db = GetDataContext(context))
 			{
-				var uspecified = new DateTime(DateTime.Now.Ticks, DateTimeKind.Unspecified);
+				var uspecified = new DateTime(TestData.DateTime.Ticks, DateTimeKind.Unspecified);
 
-				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_tstz({new DataParameter { Name = "p1", Value = value, DataType = type.dataType, DbType = type.dbType }}) as \"Value\"").Single();
+				var result = db.FromSql<ScalarResult<int>>($"SELECT issue_1742_tstz({new DataParameter { Name = "p1", Value = value.DateTime, DataType = type.DataType, DbType = type.DbType }}) as \"Value\"").Single();
 
 				Assert.AreEqual(43, result.Value);
 			}
@@ -1792,8 +1817,8 @@ namespace Tests.DataProvider
 				var maxId = db.GetTable<DateProviderSpecific>().Select(_ => _.ID).Max();
 				try
 				{
-					var date1 = DateTime.Now.Date;
-					var date2 = DateTime.Now.Date.AddDays(5);
+					var date1 = TestData.Date;
+					var date2 = TestData.Date.AddDays(5);
 					db.GetTable<DateProviderSpecific>().Insert(() => new DateProviderSpecific()
 					{
 						dateDataType = (NpgsqlDate)date1

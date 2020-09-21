@@ -99,6 +99,7 @@ namespace Tests.UserTests
 			var mammals  = new[] { "Elephant", "Cat" };
 			var reptiles = new[] { "Snake", "Lizard" };
 
+			using (new DisableBaseline("Multi-threading"))
 			using (var db = GetDataContext(context))
 			using (db.CreateLocalTable<Animal>())
 			using (db.CreateLocalTable<AnimalUpdate>())

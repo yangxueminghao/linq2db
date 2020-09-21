@@ -390,10 +390,10 @@ namespace Tests.DataProvider
 							floatDataType        = 7700 + n,
 							realDataType         = 7600 + n,
 
-							dateDataType       = DateTime.Now,
-							timeDataType       = DateTime.Now - DateTime.Today,
-							seconddateDataType = DateTime.Now,
-							timestampDataType  = DateTime.Now,
+							dateDataType       = TestData.DateTime,
+							timeDataType       = TestData.TimeOfDay,
+							seconddateDataType = TestData.DateTime,
+							timestampDataType  = TestData.DateTime,
 
 							charDataType      = 'A',
 							varcharDataType   = "AA",
@@ -431,10 +431,10 @@ namespace Tests.DataProvider
 							floatDataType        = 7700 + n,
 							realDataType         = 7600 + n,
 
-							dateDataType       = DateTime.Now,
-							timeDataType       = DateTime.Now - DateTime.Today,
-							seconddateDataType = DateTime.Now,
-							timestampDataType  = DateTime.Now,
+							dateDataType       = TestData.DateTime,
+							timeDataType       = TestData.TimeOfDay,
+							seconddateDataType = TestData.DateTime,
+							timestampDataType  = TestData.DateTime,
 
 							charDataType      = 'A',
 							varcharDataType   = "AA",

@@ -460,7 +460,7 @@ namespace Tests.Linq
 
 			static Expression<Func<Issue1189Customer, DateTime>> DefaultDateTime()
 			{
-				return p => Sql.AsSql(DateTime.Now);
+				return p => Sql.AsSql(TestData.DateTime);
 			}
 		}
 
@@ -471,7 +471,7 @@ namespace Tests.Linq
 			using (var db = GetDataContext(context))
 			using (var table = db.CreateLocalTable<Issue1189Customer>())
 			{
-				table.Where(k => k.ToDelete <= DateTime.Now).ToList();
+				table.Where(k => k.ToDelete <= TestData.DateTime).ToList();
 			}
 		}
 

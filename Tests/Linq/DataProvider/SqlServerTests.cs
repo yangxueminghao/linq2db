@@ -1134,9 +1134,9 @@ namespace Tests.DataProvider
 				yield return new AllTypes2
 				{
 					ID                     = startId + i,
-					dateDataType           = DateTime.Today.AddDays(i),
-					datetimeoffsetDataType = DateTime.Now.AddMinutes(i),
-					datetime2DataType      = DateTime.Today.AddDays(i),
+					dateDataType           = TestData.Date.AddDays(i),
+					datetimeoffsetDataType = TestData.DateTime.AddMinutes(i),
+					datetime2DataType      = TestData.Date.AddDays(i),
 					timeDataType           = TimeSpan.FromSeconds(i),
 					hierarchyidDataType    = SqlHierarchyId.Parse("/1/3/"),
 					geographyDataType      = SqlGeography.Parse("LINESTRING (-122.36 47.656, -122.343 47.656)"),
@@ -1606,11 +1606,11 @@ namespace Tests.DataProvider
 		{
 			var sampleData = new[]
 			{
-				new Issue1613Table { DateTimeOffset = DateTimeOffset.Now },
-				new Issue1613Table { DateTimeOffset = DateTimeOffset.Now.AddDays(1) },
-				new Issue1613Table { DateTimeOffset = DateTimeOffset.Now.AddDays(2) },
-				new Issue1613Table { DateTimeOffset = DateTimeOffset.Now.AddDays(3) },
-				new Issue1613Table { DateTimeOffset = DateTimeOffset.Now.AddDays(4) }
+				new Issue1613Table { DateTimeOffset = TestData.DateTimeOffset },
+				new Issue1613Table { DateTimeOffset = TestData.DateTimeOffset.AddDays(1) },
+				new Issue1613Table { DateTimeOffset = TestData.DateTimeOffset.AddDays(2) },
+				new Issue1613Table { DateTimeOffset = TestData.DateTimeOffset.AddDays(3) },
+				new Issue1613Table { DateTimeOffset = TestData.DateTimeOffset.AddDays(4) }
 			};
 			return sampleData;
 		}

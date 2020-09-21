@@ -544,7 +544,7 @@ namespace Tests.DataProvider
 				using (var db = new DataConnection(context))
 				{
 					var values = db.GetTable<TestInline>()
-						.Where(_ => (_.DateTimeValue ?? SqlDateTime.MinValue.Value) <= DateTime.Now)
+						.Where(_ => (_.DateTimeValue ?? SqlDateTime.MinValue.Value) <= TestData.DateTime)
 						.ToList();
 
 					Assert.True(db.LastQuery!.Contains(", @") != inline);

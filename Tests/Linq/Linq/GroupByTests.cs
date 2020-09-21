@@ -2049,7 +2049,7 @@ namespace Tests.Linq
 							  group record by record.TimeStamp into g
 							  select new
 							  {
-								  res = g.Count(r => r.TimeStamp > DateTime.Now),
+								  res = g.Count(r => r.TimeStamp > TestData.DateTime),
 							  }).ToList();
 
 				var index = db.LastQuery!.IndexOf("SELECT");

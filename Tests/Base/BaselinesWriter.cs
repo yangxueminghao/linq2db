@@ -49,6 +49,8 @@ namespace Tests
 				.Replace("\"", string.Empty)
 				.Replace(">" , $"0x{(ushort)'>':X4}")
 				.Replace("<" , $"0x{(ushort)'<':X4}")
+				.Replace("/" , $"0x{(ushort)'/':X4}")
+				.Replace(":" , $"0x{(ushort)':':X4}")
 				;
 		}
 

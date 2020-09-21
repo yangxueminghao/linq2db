@@ -426,7 +426,7 @@ namespace Tests.DataProvider
 			using (var con = new FbConnection(DataConnection.GetConnectionString(context)))
 			using (var dbm = new DataConnection(new FirebirdDataProvider(), con))
 			{
-				dbm.GetTable<AllTypes>().Where(t => t.timestampDataType == DateTime.Now).ToList();
+				dbm.GetTable<AllTypes>().Where(t => t.timestampDataType == TestData.DateTime).ToList();
 			}
 		}
 
