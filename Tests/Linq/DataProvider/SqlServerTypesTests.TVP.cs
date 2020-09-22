@@ -177,6 +177,7 @@ namespace Tests.DataProvider
 			[IncludeDataSources(TestProvName.AllSqlServer2008Plus)] string context,
 			[ValueSource(nameof(DataParameterFactories))] DataParameterFactoryTestCase testCase)
 		{
+			using (new DisableBaseline("Provider-specific output", IsMsProvider(context)))
 			using (var external = new DataConnection(context))
 			using (var db = new DataConnection(context))
 			{
@@ -191,6 +192,7 @@ namespace Tests.DataProvider
 			[IncludeDataSources(TestProvName.AllSqlServer2008Plus)] string context,
 			[ValueSource(nameof(QueryDataParameterFactories))] DataParameterFactoryTestCase testCase)
 		{
+			using (new DisableBaseline("Provider-specific output", IsMsProvider(context)))
 			using (var external = new DataConnection(context))
 			using (var db = new DataConnection(context))
 			{
@@ -216,6 +218,7 @@ namespace Tests.DataProvider
 			[IncludeDataSources(TestProvName.AllSqlServer2008Plus)] string context,
 			[ValueSource(nameof(QueryDataParameterFactories))] DataParameterFactoryTestCase testCase)
 		{
+			using (new DisableBaseline("Provider-specific output", IsMsProvider(context)))
 			using (var external = new DataConnection(context))
 			using (var db = new DataConnection(context))
 			using (var table = db.CreateTempTable<TestMergeTVPTable>())

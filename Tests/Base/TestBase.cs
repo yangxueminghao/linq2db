@@ -36,15 +36,16 @@ namespace Tests
 	{
 		protected static class TestData
 		{
-			public static readonly DateTimeOffset DateTimeOffset    = new DateTimeOffset(2020, 2, 29, 17, 54, 55, 123, TimeSpan.FromMinutes(45)).AddTicks(1234);
-			public static readonly DateTimeOffset DateTimeOffsetUtc = new DateTimeOffset(2020, 2, 29, 17, 9, 55, 123, TimeSpan.Zero).AddTicks(1234);
-			public static readonly DateTime DateTime                = new DateTime(2020, 2, 29, 17, 54, 55, 123).AddTicks(1234);
-			public static readonly DateTime DateTimeUtc             = new DateTime(2020, 2, 29, 17, 54, 55, 123, DateTimeKind.Utc).AddTicks(1234);
-			public static readonly DateTime Date                    = new DateTime(2020, 2, 29);
-			public static readonly TimeSpan TimeOfDay               = new TimeSpan(0, 17, 54, 55, 123).Add(TimeSpan.FromTicks(1234));
-			public static readonly Guid     Guid1                   = new Guid("bc7b663d-0fde-4327-8f92-5d8cc3a11d11");
-			public static readonly Guid     Guid2                   = new Guid("a948600d-de21-4f74-8ac2-9516b287076e");
-			public static readonly Guid     Guid3                   = new Guid("bd3973a5-4323-4dd8-9f4f-df9f93e2a627");
+			// offset 40 is not used by any timezone, so we can detect tz handling issues, which could be hidden when offset match current TZ
+			public static readonly DateTimeOffset DateTimeOffset          = new DateTimeOffset(2020, 2, 29, 17, 54, 55, 123, TimeSpan.FromMinutes(40)).AddTicks(1234);
+			public static readonly DateTimeOffset DateTimeOffsetUtc       = new DateTimeOffset(2020, 2, 29, 17, 9, 55, 123, TimeSpan.Zero).AddTicks(1234);
+			public static readonly DateTime DateTime                      = new DateTime(2020, 2, 29, 17, 54, 55, 123).AddTicks(1234);
+			public static readonly DateTime DateTimeUtc                   = new DateTime(2020, 2, 29, 17, 54, 55, 123, DateTimeKind.Utc).AddTicks(1234);
+			public static readonly DateTime Date                          = new DateTime(2020, 2, 29);
+			public static readonly TimeSpan TimeOfDay                     = new TimeSpan(0, 17, 54, 55, 123).Add(TimeSpan.FromTicks(1234));
+			public static readonly Guid     Guid1                         = new Guid("bc7b663d-0fde-4327-8f92-5d8cc3a11d11");
+			public static readonly Guid     Guid2                         = new Guid("a948600d-de21-4f74-8ac2-9516b287076e");
+			public static readonly Guid     Guid3                         = new Guid("bd3973a5-4323-4dd8-9f4f-df9f93e2a627");
 
 			public static byte[] Binary(int size)
 			{
@@ -1381,11 +1382,11 @@ namespace Tests
 		private readonly CustomTestContext _ctx;
 		private readonly bool _oldState;
 
-		public DisableBaseline(string reason)
+		public DisableBaseline(string reason, bool disable = true)
 		{
 			_ctx = CustomTestContext.Get();
 			_oldState = _ctx.Get<bool>(CustomTestContext.BASELINE_DISABLED);
-			_ctx.Set(CustomTestContext.BASELINE_DISABLED, true);
+			_ctx.Set(CustomTestContext.BASELINE_DISABLED, disable);
 		}
 
 		public void Dispose()

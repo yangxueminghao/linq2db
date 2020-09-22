@@ -414,9 +414,12 @@ namespace Tests.Data
 				Assert.AreEqual(dtValue, ((MySqlConnectorDateTime)rawDtValue).GetDateTime());
 
 				// test provider-specific parameter values
-				Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.Date)));
-				Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.DateTime)));
-				Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.DateTime2)));
+				using (new DisableBaseline("Output (datetime format) is culture-/system-dependent"))
+				{
+					Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.Date)));
+					Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.DateTime)));
+					Assert.AreEqual(dtValue, db.Execute<DateTime>("SELECT Cast(@p as datetime)", new DataParameter("@p", new MySqlConnectorDateTime(dtValue), DataType.DateTime2)));
+				}
 
 				// assert provider-specific parameter type name
 				Assert.AreEqual(2, db.Execute<int>("SELECT ID FROM AllTypes WHERE tinyintDataType = @p", new DataParameter("@p", (sbyte)111, DataType.SByte)));
@@ -1294,6 +1297,7 @@ namespace Tests.Data
 		}
 #endif
 
+		[ActiveIssue(2499)]
 		[Test]
 		public void TestOracleManaged([IncludeDataSources(TestProvName.AllOracleManaged)] string context, [Values] ConnectionType type)
 		{

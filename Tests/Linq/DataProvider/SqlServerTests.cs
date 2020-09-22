@@ -102,6 +102,7 @@ namespace Tests.DataProvider
 		[Test]
 		public void TestDataTypes2([IncludeDataSources(TestProvName.AllSqlServer2008Plus)] string context)
 		{
+			using (new DisableBaseline("Provider-specific output", IsMsProvider(context)))
 			using (var conn = new DataConnection(context))
 			{
 				Assert.That(TestType<DateTime?>      (conn, "dateDataType",           DataType.Date,           "AllTypes2"), Is.EqualTo(new DateTime(2012, 12, 12)));

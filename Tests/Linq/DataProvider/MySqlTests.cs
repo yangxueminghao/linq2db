@@ -104,7 +104,8 @@ namespace Tests.DataProvider
 				}
 				else
 				{
-					Assert.That(TestType<MySqlConnectorDateTime?>(conn, "datetimeDataType", DataType.DateTime), Is.EqualTo(new MySqlConnectorDateTime(2012, 12, 12, 12, 12, 12, 0)));
+					using (new DisableBaseline("Output (datetime format) is culture-/system-dependent"))
+						Assert.That(TestType<MySqlConnectorDateTime?>(conn, "datetimeDataType", DataType.DateTime), Is.EqualTo(new MySqlConnectorDateTime(2012, 12, 12, 12, 12, 12, 0)));
 				}
 			}
 		}

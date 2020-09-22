@@ -96,15 +96,13 @@ namespace Tests.Linq
 
 		[Test]
 		public void TestByCall(
+			[IncludeDataSources(TestProvName.AllSqlServer2005Plus)] string context,
 			[Values("tableName1", "tableName2")] string tableName,
 			[Values("database1",  "database2")]  string databaseName,
 			[Values("schema1",    "schema2")]    string schemaName
 		)
 		{
-			if (!UserProviders.Contains(ProviderName.SqlServer))
-				return;
-
-			using (var db = GetDataContext(ProviderName.SqlServer))
+			using (var db = GetDataContext(context))
 			{
 				var query =
 					from c in db.Child
@@ -126,15 +124,13 @@ namespace Tests.Linq
 
 		[Test]
 		public void TestInlined(
+			[IncludeDataSources(TestProvName.AllSqlServer2005Plus)] string context,
 			[Values("tableName1", "tableName2")] string tableName,
 			[Values("database1",  "database2")]  string databaseName,
 			[Values("schema1",    "schema2")]    string schemaName
 		)
 		{
-			if (!UserProviders.Contains(ProviderName.SqlServer))
-				return;
-
-			using (var db = GetDataContext(ProviderName.SqlServer))
+			using (var db = GetDataContext(context))
 			{
 				var query =
 					from c in db.Child
@@ -157,13 +153,10 @@ namespace Tests.Linq
 
 		[Test]
 		public void TakeHint(
-			[Values(TakeHints.Percent, TakeHints.WithTies, TakeHints.Percent | TakeHints.WithTies)] TakeHints takeHint
-		)
+			[IncludeDataSources(TestProvName.AllSqlServer2005Plus)] string context,
+			[Values(TakeHints.Percent, TakeHints.WithTies, TakeHints.Percent | TakeHints.WithTies)] TakeHints takeHint)
 		{
-			if (!UserProviders.Contains(ProviderName.SqlServer))
-				return;
-
-			using (var db = GetDataContext(ProviderName.SqlServer))
+			using (var db = GetDataContext(context))
 			{
 				var query =
 					from c1 in db.Child

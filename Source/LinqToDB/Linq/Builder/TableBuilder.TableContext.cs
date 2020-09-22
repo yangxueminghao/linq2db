@@ -570,7 +570,7 @@ namespace LinqToDB.Linq.Builder
 						names.Add(cd.MemberName, n++);
 
 				var q =
-					from r in SqlTable.Fields.Values.Select((f,i) => new { f, i })
+					from r in SqlTable.Fields.Select((f,i) => new { f, i })
 					where names.ContainsKey(r.f.Name)
 					orderby names[r.f.Name]
 					select index[r.i];
@@ -602,7 +602,7 @@ namespace LinqToDB.Linq.Builder
 					var table = new SqlTable(Builder.MappingSchema, tableType);
 
 					var matchedFields = new List<SqlInfo>();
-					foreach (var field in table.Fields.Values)
+					foreach (var field in table.Fields)
 					{
 						foreach (var sqlInfo in info)
 						{
@@ -645,12 +645,8 @@ namespace LinqToDB.Linq.Builder
 				else
 				{
 					var exceptionMethod = MemberHelper.MethodOf(() => DefaultInheritanceMappingException(null!, null!));
-					var dindex =
-					(
-						from f in SqlTable.Fields.Values
-						where f.Name == InheritanceMapping[0].DiscriminatorName
-						select ConvertToParentIndex(_indexes[f].Index, this)
-					).First();
+					var field  = SqlTable[InheritanceMapping[0].DiscriminatorName] ?? throw new LinqException($"Field {InheritanceMapping[0].DiscriminatorName} not found in table {SqlTable}");
+					var dindex = ConvertToParentIndex(_indexes[field].Index, this);
 
 					expr = Expression.Convert(
 						Expression.Call(null, exceptionMethod,
@@ -664,12 +660,8 @@ namespace LinqToDB.Linq.Builder
 
 				foreach (var mapping in InheritanceMapping.Select((m,i) => new { m, i }).Where(m => m.m != defaultMapping))
 				{
-					var dindex =
-						(
-							from f in SqlTable.Fields.Values
-							where f.Name == InheritanceMapping[mapping.i].DiscriminatorName
-							select ConvertToParentIndex(_indexes[f].Index, this)
-						).First();
+					var field  = SqlTable[InheritanceMapping[mapping.i].DiscriminatorName] ?? throw new LinqException($"Field {InheritanceMapping[mapping.i].DiscriminatorName} not found in table {SqlTable}");
+					var dindex = ConvertToParentIndex(_indexes[field].Index, this);
 
 					Expression testExpr;
 
@@ -820,7 +812,7 @@ namespace LinqToDB.Linq.Builder
 									else
 									
 									{
-										result = SqlTable.Fields.Values
+										result = SqlTable.Fields
 											.Where(field => !field.IsDynamic && !field.SkipOnEntityFetch)
 											.Select(f =>
 												f.ColumnDescriptor != null
@@ -886,7 +878,7 @@ namespace LinqToDB.Linq.Builder
 								}
 
 								var q =
-									from field in SqlTable.Fields.Values
+									from field in SqlTable.Fields
 									where field.IsPrimaryKey
 									orderby field.PrimaryKeyOrder
 									select new SqlInfo(field.ColumnDescriptor.MemberInfo, field, SelectQuery);
@@ -1334,7 +1326,7 @@ namespace LinqToDB.Linq.Builder
 								if (sameType || InheritanceMapping.Count > 0)
 								{
 									string? pathName = null;
-									foreach (var field in SqlTable.Fields.Values)
+									foreach (var field in SqlTable.Fields)
 									{
 										var name = levelMember.Member.Name;
 										if (field.Name.IndexOf('.') >= 0)
@@ -1366,7 +1358,7 @@ namespace LinqToDB.Linq.Builder
 
 						if (levelExpression == memberExpression)
 						{
-							foreach (var field in SqlTable.Fields.Values)
+							foreach (var field in SqlTable.Fields)
 							{
 								if (field.ColumnDescriptor.MemberInfo.EqualsTo(memberExpression.Member, SqlTable.ObjectType))
 								{
@@ -1380,11 +1372,11 @@ namespace LinqToDB.Linq.Builder
 										{
 											while (me.Expression is MemberExpression me1)
 											{
-												me = me1;
+												me   = me1;
 												name = me.Member.Name + '.' + name;
 											}
 
-											var fld = SqlTable.Fields.Values.FirstOrDefault(f => f.Name == name);
+											var fld = SqlTable[name];
 
 											if (fld != null)
 												return fld;
@@ -1409,7 +1401,8 @@ namespace LinqToDB.Linq.Builder
 									// do not add association columns
 									if (EntityDescriptor.Associations.All(a => a.MemberInfo != memberExpression.Member))
 									{
-										if (!SqlTable.Fields.TryGetValue(fieldName, out var newField))
+										var newField = SqlTable[fieldName];
+										if (newField == null)
 										{
 											newField = new SqlField(new ColumnDescriptor(
 												Builder.MappingSchema,
